@@ -1,16 +1,27 @@
 cask "meeting-transcriber" do
-  version "1.5.0"
-  sha256 "f6815215fb3b414b4c31cdc65785828cb8e830efa40ee24d295fde80feb1a0ce"
+  version "1.4.0"
+  sha256 "45c405854a2ba5c999bfbf56cea39ec9fb33abc31336acff7410040c53a0f474"
 
   url "https://meeting-insights-hub-production.up.railway.app/api/download/mac"
-  name "MeetSketch"
-  desc "Desktop app for MeetSketch - real-time meeting transcription"
+  name "Meeting Transcriber"
+  desc "Desktop app for Meeting Insights Hub - real-time meeting transcription"
   homepage "https://meeting-insights-hub-production.up.railway.app"
 
-  app "MeetSketch.app"
+  # Remove quarantine before and after install (app is not code-signed)
+  preflight do
+    system_command "/usr/bin/xattr",
+                   args: ["-cr", "#{staged_path}/Meeting Transcriber.app"]
+  end
+
+  app "Meeting Transcriber.app"
+
+  postflight do
+    system_command "/usr/bin/xattr",
+                   args: ["-cr", "#{appdir}/Meeting Transcriber.app"]
+  end
 
   zap trash: [
-    "~/Library/Application Support/meetsketch",
-    "~/Library/Preferences/com.meetsketch.desktop.plist",
+    "~/Library/Application Support/meeting-transcriber",
+    "~/Library/Preferences/com.meeting-transcriber.desktop.plist",
   ]
 end
